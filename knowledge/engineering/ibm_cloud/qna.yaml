@@ -1,0 +1,47 @@
+version: 1
+domain: IT
+created_by: vincent
+seed_examples:
+  - context: |
+     A deployable architecture is cloud automation for deploying a common architectural pattern that combines one or more cloud resources. It is designed to provide simplified deployment by users, scalability, and modularity. A deployable architecture incorporates one or more modules. Deployable architectures are coded in Terraform, which you configure with input variables to achieve the behavior that you want. In the case of a deployable architecture stack, it incorporates one or more deployable architectures that are grouped without requiring Terraform code.
+     For example, VPC landing zone is a deployable architecture that provisions several virtual private clouds in a hub-and-spoke networking pattern that is connected by a transit gateway. It includes a number of supporting services that are used for the monitoring and security of the workloads that run on the VPCs.
+     Deployable architectures that are built and maintained by experts at IBM Cloud are made available to you in the IBM Cloud catalog. If you choose to create your own version of those deployable architectures, or build one from scratch, you can onboard your deployable architecture to a private catalog and share your ready-to-deploy solution with your organization through the catalog.
+    questions_and_answers:
+      - question: |
+          What is a DA?
+        answer: |
+          DA stands for deployable architecture, which is cloud automation
+          for deploying a common architectural pattern that combines one or
+          more cloud resources.
+      - question: |
+          Give me an example of deployable architecture.
+        answer: |
+          An example of a deployable architecture is the VPC landing zone,
+          which provisions several virtual private clouds in a hub-and-spoke
+          networking pattern connected by a transit gateway.
+      - question: |
+          What is the difference between a module and a deployable architecture?
+        answer: |
+          A module is a reusable Terraform configuration that defines a set
+          of related resources, while a deployable architecture is cloud
+          automation for deploying a common architectural pattern that combines
+          one or more cloud resources.
+      - question: |
+          How can I share my deployable architecture with my organization?
+        answer: |
+          You can onboard your deployable architecture to a private catalog
+          and share your ready-to-deploy solution with your organization
+          through the catalog.
+      - question: |
+          Where can I find deployable architectures built by IBM Cloud experts?
+        answer: |
+          Deployable architectures built and maintained by experts at IBM
+          Cloud are available to you in the IBM Cloud catalog.
+document_outline: |
+  Introduction to the different types of infrastructure as code assets in IBM Cloud, including module and deployable architectures, and how they can be used to automate the deployment of cloud resources.
+
+document:
+  repo: https://github.com/ibm-cloud-docs/secure-enterprise.git
+  commit: 8a311e13a489d2c39f83f77960aecee6b20f42d4
+  patterns:
+    - what-is-module-da.md
