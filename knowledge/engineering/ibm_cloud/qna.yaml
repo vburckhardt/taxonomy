@@ -37,6 +37,184 @@ seed_examples:
         answer: |
           Deployable architectures built and maintained by experts at IBM
           Cloud are available to you in the IBM Cloud catalog.
+  - context: |
+      On IBM Cloud, you can use Terraform to create and manage your IBM Cloud resources. IBM Cloud provides a comprehensive set of services and tools for building, deploying, and managing cloud-based applications.
+      IBM Cloud Terraform plugin: The IBM Cloud Terraform Provider allows users to create and manage their IBM Cloud resources using Terraform, providing a consistent and automated way to provision and manage cloud infrastructure. The IBM Cloud Terraform provider can be used to manage a wide range of IBM Cloud services, including compute, storage, networking, and more.
+      Comprehensive set of Terraform modules: Terraform-IBM-Modules (TIM) is a collection of curated Terraform modules that provide pre-built infrastructure configurations for common IBM Cloud use cases. The modules are built on top of the IBM Cloud Terraform provider. Many of these modules are actively maintained by the IBM Cloud development organization. These modules are also used by the IBM Cloud services to build their own infrastructure.
+      Full architecture pattern as code: Deployable architectures are modular and reusable infrastructure configurations that you can easily publish or consume through the IBM Cloud catalog. They are based on Terraform, but go to the next level by providing further integration into the IBM Cloud ecosystem: documentation, compliance claims, support for public deployable architectures, integration with IBM Cloud for facilitating deployment at scale.
+      Terraform as a Service: IBM Cloud Schematics is an IBM Cloud SaaS offering for managing and executing Terraform configurations.
+      IaC at scale: IBM Cloud Projects is an IBM Cloud service that allows users to organize and manage their cloud resources and infrastructure configurations in a single, unified view. IBM Cloud Projects leverage IBM Cloud Schematics for the execution of the Terraform configurations.
+    questions_and_answers:
+      - question: |
+          What is the IBM Cloud Terraform Provider?
+        answer: |
+          The IBM Cloud Terraform Provider allows users to create and manage
+          their IBM Cloud resources using Terraform, providing a consistent
+          and automated way to provision and manage cloud infrastructure.
+      - question: |
+          What is Terraform-IBM-Modules (TIM)?
+        answer: |
+          Terraform-IBM-Modules (TIM) is a collection of curated Terraform
+          modules that provide pre-built infrastructure configurations for
+          common IBM Cloud use cases.
+      - question: |
+          What is IBM Cloud Schematics?
+        answer: |
+          IBM Cloud Schematics is an IBM Cloud SaaS offering for managing and
+          executing Terraform configurations.
+      - question: |
+          What is IBM Cloud Projects?
+        answer: |
+          IBM Cloud Projects is an IBM Cloud service that allows users to
+          organize and manage their cloud resources and infrastructure
+          configurations in a single, unified view.
+      - question: |
+          What is a deployable architecture?
+        answer: |
+          Deployable architectures are modular and reusable infrastructure
+          configurations that you can easily publish or consume through the
+          IBM Cloud catalog.
+  - context: |
+     Use clear and descriptive names for your variables to enhance readability and usability. This helps other users (or your future self) understand the purpose of each variable quickly. Best practices include:
+
+     Use full names rather than acronyms to make it easier for users not familiar with the products or services to understand what they refer to. For example: secrets_manager instead of sm, event_notification instead of en. However, industry-wide naming conventions, such as vpc for Virtual Private Cloud or cos for Object Storage, are acceptable and can be used to maintain consistency with established standards.
+     Use underscores for separation. Instead of camelCase, use snake_case for better alignment with Terraform conventions.
+     Be consistent in ordering of similar terms. For instance, id or name is always located at the end of a variable name: resource_group_id and not id_resource_group.
+     Start boolean variable names with verbs. Examples: use_private_endpoint, force_delete_storage, disable_outbound_traffic_protection
+     Avoid ambiguity about resource creation. When it is not obvious through the context, clearly indicate when a variable refers to an existing infrastructure resource, as opposed to a resource that will be created by the module or DA. A convention is to prefix the name of the variable with existing_. For example, existing_kms_instance_name for a variable that take as input the name of a key management service that already exists in the account. This clearly re-enforce the fact that the module does not create the key management service instance, as the name kms_instance_name could have brought to think.
+     Contextualize inputs: For multi-service modules or DAs, use the name of the service as prefix of the variable names. An example is the ocp_all_inclusive module that allows to create an Openshift cluster and configure various side aspects of it, such as the log analysis aspects. All inputs related to log analysis are prefixed with log_analysis, such as log_analysis_secret_name, log_analysis_instance_region. However, for modules that handles only one type of resource, context is generally clear enough, and prefixing variable name is not recommended to avoid artificial redundancy.
+    questions_and_answers:
+      - question: |
+          What are some best practices for naming variables in Terraform?
+        answer: |
+          Some best practices for naming variables in Terraform include using
+          clear and descriptive names, avoiding acronyms, using underscores
+          for separation, being consistent in ordering of similar terms, and
+          starting boolean variable names with verbs.
+      - question: |
+          How can you avoid ambiguity about resource creation in Terraform?
+        answer: |
+          To avoid ambiguity about resource creation in Terraform, clearly
+          indicate when a variable refers to an existing infrastructure
+          resource, as opposed to a resource that will be created by the
+          module or deployable architecture. A convention is to prefix the
+          name of the variable with existing_.
+      - question: |
+          How can you contextualize inputs in Terraform?
+        answer: |
+          For multi-service modules or deployable architectures, use the name
+          of the service as a prefix of the variable names. For example, all
+          inputs related to log analysis in the ocp_all_inclusive module are
+          prefixed with log_analysis.
+      - question: |
+          Are the following variable names following best practices?
+          `existing_kms_instance_name`
+          `sm_secret_name`
+          `cos_bucket_name`
+          `use_private_endpoint`
+        answer: |
+          The following variable names are following best practices:
+          `existing_kms_instance_name` because it clearly indicates that the
+          key management service instance already exists.
+          `cos_bucket_name` because it uses an industry-wide naming convention.
+          `use_private_endpoint` because it starts with a verb.
+          However, `sm_secret_name` is not following best practices because it uses
+          an acronym instead of a full name.
+  - context: |
+      Organize and optimize variables
+      - Group variable definitions: Use a dedicated variables.tf file to organize all input variables, improving discoverability and reusability. For more information on module structure, see Module and deployable architecture structure guidelines.
+      - Collocate related variables: Group related inputs logically, this helps the reader discover related variables quickly. For example, variables.tf in the ocp-all-inclusive module clearly group together variables related to VPC, Cluster definition, Key management, Log analysis.
+      - Order variable for usability: Place frequently used variables, like resource_group, and region, at the top of the variables.tf file.
+      Avoid hardcoding values:
+      - Maximize number of inputs: Maximize number of inputs for generic reusable modules to make them more flexible and adaptable. However, this practice does not apply to deployable architectures, where the goal is to minimize the number of inputs. See Deployable Architecture-Specific Recommendations.
+      - Leverage defaults: Define sensible defaults for most variables to simplify adoption without requiring detailed user input. This enables users to quickly start using the module with just a few required variables to set.
+      - Ensure defaults aligns with common usage patterns: If multiple common use cases are identified, consider implementing variations of the module defaults tailored to each use case. This approach is widely adopted in the community-maintained modules at terraform-ibm-module. For example, the terraform-ibm-icd-postgresql module define defaults that allows most users to quickly start with a cost-effective and publicly accessible PostgreSQL database instance. Additionally, the sub-module located in the fscloud directory defines stricter defaults designed for compliance-focused use cases, such as configuring the instance to restrict public internet access by default.
+    questions_and_answers:
+      - question: |
+          What are some best practices for organizing and optimizing variables in Terraform?
+        answer: |
+          Some best practices for organizing and optimizing variables in Terraform
+          include grouping variable definitions in a dedicated variables.tf file,
+          collocating related variables, ordering variables for usability, maximizing
+          the number of inputs for generic reusable modules, leveraging defaults,
+          and ensuring defaults align with common usage patterns.
+      - question: |
+          Why should you group variable definitions in a dedicated variables.tf file?
+        answer: |
+          Grouping variable definitions in a dedicated variables.tf file helps
+          organize all input variables, improving discoverability and reusability.
+      - question: |
+          What is the benefit of collocating related variables in Terraform?
+        answer: |
+          Collocating related variables groups inputs logically, helping the reader
+          discover related variables quickly.
+      - question: |
+          How can you ensure defaults align with common usage patterns in Terraform?
+        answer: |
+          To ensure defaults align with common usage patterns in Terraform, consider
+          implementing variations of the module defaults tailored to each use case.
+          This approach is widely adopted in community-maintained modules.
+  - context: |
+     Understand root and reusable modules
+
+     When writing Terraform code, whether for a standalone module or as part of a deployable architecture, you need to understand the distinction between the two module types in the Terraform ecosystem:
+
+     - Root modules: These are the Terraform configuration that you can actually execute with terraform apply commands. In IBM Cloud, these are the configurations that can be run in Schematics or packaged as deployable architectures. They contain the provider configuration, like region and authentication, needed for execution.
+     - Reusable modules: These are building blocks that can be imported into root modules or other reusable modules. They cannot be directly executed with terraform apply. They provide specific functionality without provider configuration, making them flexible and reusable. Reusable modules are essentially building blocks that can be used to create more complex infrastructure configuration, such as the root module used as part of a deployable architecture.
+
+     The distinction between root and reusable modules isn't enforced through specific Terraform syntax or keywords. The main technical difference is that root modules include a provider definition which makes them standalone or executable, while reusable modules don't. By convention, this provider definition is often placed in a file named provider.tf, but it can be in any Terraform configuration (.tf file). For example:
+
+      provider.tf
+      `hcl
+      provider "ibm" {
+        region           = "us-south"
+        ibmcloud_api_key = "your_api_key"
+      }`
+    questions_and_answers:
+      - question: |
+          What is the distinction between root and reusable modules in Terraform?
+        answer: |
+          Root modules are Terraform configurations that can be executed with
+          terraform apply commands, while reusable modules are building blocks
+          that can be imported into root modules or other reusable modules.
+      - question: |
+          What is the main technical difference between root and reusable modules?
+        answer: |
+          The main technical difference between root and reusable modules is that
+          root modules include a provider definition, making them standalone or
+          executable, while reusable modules don't.
+      - question: |
+          Where is the provider definition typically placed in a Terraform configuration?
+        answer: |
+          The provider definition is often placed in a file named provider.tf,
+          but it can be in any Terraform configuration (.tf file).
+      - question: |
+          Can reusable modules be executed with terraform apply commands?
+        answer: |
+          Reusable modules cannot be directly executed with terraform apply
+          commands. They are building blocks that provide specific functionality
+          without provider configuration.
+      - question: |
+          What is the purpose of a root module in Terraform?
+        answer: |
+          The purpose of a root module in Terraform is to contain the provider
+          configuration needed for execution, such as region and authentication.
+      - question: |
+          How can I execute a reusable module?
+        answer: |
+          Reusable modules can be imported into root modules or other reusable
+          modules to create more complex infrastructure configurations.
+          Example:
+          `hcl
+          module "reusable_module" {
+            source = "./path/to/reusable_module"
+          }`
+          provider.tf
+          `hcl
+          provider "ibm" {
+            region           = "us-south"
+            ibmcloud_api_key = "your_api_key"
+          }`
 document_outline: |
   Introduction to the different types of infrastructure as code assets in IBM Cloud, including module and deployable architectures, and how they can be used to automate the deployment of cloud resources.
 
